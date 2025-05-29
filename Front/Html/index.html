@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/CSS/index.css">
+    <title>Gestión de memoria</title>
+</head>
+
+<body>
+
+    <header>
+        <h1>Laboratorio 2: Gestión de memoria</h1>
+    </header>
+
+    <main>
+        <section class="configuracion">
+            <label for="selector">Selecciona un algoritmo:</label>
+            <select id="selector" style="border-radius: 9999px;">
+                <option value="1">Particiones estáticas de tamaño fijo</option>
+                <option value="2">Particiones estáticas de tamaño variable</option>
+                <option value="3">Particiones dinámicas sin compactación</option>
+                <option value="4">Particiones dinámicas con compactación</option>
+            </select>
+        </section>
+
+        <div class="tabla-contenedor">
+            <div>
+                <br> <br> <br>
+                <button id="agregar-proceso-btn">Agregar Proceso</button> <br> <br>
+                <button class="eliminar-fila-btn">Eliminar último proceso</button><br><br>
+                <button id="leer-informacion-btn">Leer tabla</button><br><br>
+            </div>
+            <div>
+                <h3>Información de procesos</h3>
+                <table id="tabla-procesos">
+                    <thead id="thead-procesos">
+                        <tr id="fila-principal">
+                            <th>Proceso</th>
+                            <th>Tiempo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-procesos">
+                        <tr>
+                            <td contenteditable="true">P1</td>
+                            <td contenteditable="true">X1</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">P2</td>
+                            <td contenteditable="true">X2</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">P3</td>
+                            <td contenteditable="true">X3</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">P4</td>
+                            <td contenteditable="true">X4</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">P5</td>
+                            <td contenteditable="true">X5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tabla-contenedor">
+            <div>
+                <h3>Tabla de descripción de particiones</h3>
+                <table id="tabla-procesos">
+                    <thead id="thead-procesos">
+                        <tr id="fila-principal">
+                            <th rowspan="2">PID</th>
+                            <th rowspan="2">L/O</th>
+                            <th colspan="2" class="bloqueo-header">Base</th>
+                        </tr>
+                        <tr id="subfila-principal">
+                            <th>DEC</th>
+                            <th>HEX</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-procesos">
+                        <tr>
+                            <td contenteditable="true">SO</td>
+                            <td contenteditable="true">1</td>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">000000</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">P1</td>
+                            <td contenteditable="true">1</td>
+                            <td contenteditable="true">1048576</td>
+                            <td contenteditable="true">100000</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">P2</td>
+                            <td contenteditable="true">1</td>
+                            <td contenteditable="true">2097152</td>
+                            <td contenteditable="true">200000</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">P3</td>
+                            <td contenteditable="true">1</td>
+                            <td contenteditable="true">3145728</td>
+                            <td contenteditable="true">300000</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">P4</td>
+                            <td contenteditable="true">1</td>
+                            <td contenteditable="true">4194304</td>
+                            <td contenteditable="true">400000</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">P5</td>
+                            <td contenteditable="true">1</td>
+                            <td contenteditable="true">5242880</td>
+                            <td contenteditable="true">500000</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">6291456</td>
+                            <td contenteditable="true">600000</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">7340032</td>
+                            <td contenteditable="true">700000</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">8388608</td>
+                            <td contenteditable="true">800000</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">9437184</td>
+                            <td contenteditable="true">900000</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">10485760</td>
+                            <td contenteditable="true">A00000</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">11534336</td>
+                            <td contenteditable="true">B00000</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">12582912</td>
+                            <td contenteditable="true">C00000</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">13631488</td>
+                            <td contenteditable="true">D00000</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">14680064</td>
+                            <td contenteditable="true">E00000</td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">0</td>
+                            <td contenteditable="true">15728640</td>
+                            <td contenteditable="true">F00000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tabla-grafica">
+                <h3>Pila</h3>
+                <table style="border: black;"> <!-- Grafica -->
+                    <thead><br><br><br>
+                        <!-- Toca cambiar el with 100%; No se sabe el comportambiento al graficar muchos tiempos de procesador -->
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="vacio"></div>
+                            </td>
+                            <td>
+                                <div class="vacio">1048576</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="vacio"></div>
+                            </td>
+                            <td>
+                                <div class="vacio">1048576</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="vacio"></div>
+                            </td>
+                            <td>
+                                <div class="vacio">1048576</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="vacio"></div>
+                            </td>
+                            <td>
+                                <div class="vacio">1048576</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="vacio"></div>
+                            </td>
+                            <td>
+                                <div class="vacio">1048576</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="vacio"></div>
+                            </td>
+                            <td>
+                                <div class="vacio">1048576</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="vacio"></div>
+                            </td>
+                            <td>
+                                <div class="vacio">1048576</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="vacio"></div>
+                            </td>
+                            <td>
+                                <div class="vacio">1048576</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="vacio"></div>
+                            </td>
+                            <td>
+                                <div class="vacio">1048576</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="vacio"></div>
+                            </td>
+                            <td>
+                                <div class="vacio">1048576</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ejecucion">P5</div>
+                            </td>
+                            <td>
+                                <div class="ejecucion">1048576</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ejecucion">P4</div>
+                            </td>
+                            <td>
+                                <div class="ejecucion">1048576</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ejecucion">P3</div>
+                            </td>
+                            <td>
+                                <div class="ejecucion">1048576</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ejecucion">P2</div>
+                            </td>
+                            <td>
+                                <div class="ejecucion">1048576</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ejecucion">P1</div>
+                            </td>
+                            <td>
+                                <div class="ejecucion">1048576</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="so">S. O</div>
+                            </td>
+                            <td>
+                                <div class="so">1048576</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tr>
+
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="autor">
+                <p>Juan Manuel Castillo</p>
+                <img src="../static/images/github.png" alt="GitHub">
+            </div>
+            <div class="autor">
+                <p>Sebastian Quintero Jaimes</p>
+                <a href="https://github.com/Pillallo13"> <img src="../static/images/github.png" alt="GitHub"></a>
+            </div>
+            <div class="autor">
+                <p>Luna Gaitan</p>
+                <img src="../static/images/github.png" alt="GitHub">
+            </div>
+        </div>
+    </footer>
+    <script type="module" src="../../src/tabla.js"> </script>
+    <script type="module" src="../../src/tabla-resultados.js"> </script>
+    <script type="module" src="../../src/controlador.js"></script>
+    <script type="module" src="../../src/Render.js"> </script>
+</body>
+
+</html>

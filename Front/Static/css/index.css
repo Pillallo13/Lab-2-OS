@@ -1,0 +1,126 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+footer {
+    background-color: #723d97;
+    color: rgb(255, 255, 255);
+    width: 100%;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+header {
+    text-align: center;
+    padding: 1px;
+    background-color: #723d97;
+    color: rgb(255, 255, 255);
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    padding: 20px;
+}
+
+.tabla-contenedor {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 20px; 
+    justify-content: left; 
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+button{
+    background-color: #eccaf7;
+    color: rgb(0,0,0);
+    border-color: #ccc;
+    height: 40px;
+    width: 150px;
+    border-radius: 9999px;
+    
+}
+
+table {
+    border-collapse: collapse;
+    width: 10%;
+    min-width: 400px;
+}
+
+th,
+td {
+    border: 1px solid #999;
+    padding: 0px;
+    height: 30px;
+    width: 5%;
+    text-align: center;
+}
+
+th {
+    background-color: #eee;
+}
+
+.ejecucion {
+    background-color: #4caf50;
+    height: 100%;
+}
+
+.so {
+    background-color: #f8f32b;
+    height: 100%;
+    align-content: center;
+}
+
+.vacio {
+    background-color: #dbdbdb;
+    height: 100%;
+}
+
+
+.footer-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 0 auto;
+    gap: 20px;
+}
+
+.autor {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.autor img {
+    width: 24px;
+    height: 24px;
+}
+
+.configuracion {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.configuracion label {
+    font-weight: bold;
+}
+
+.configuracion input,
+.configuracion select {
+    padding: 4px 8px;
+    font-size: 1rem;
+}
