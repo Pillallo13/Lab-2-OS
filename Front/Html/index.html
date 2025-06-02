@@ -33,91 +33,63 @@
                 <button id="leer-informacion-btn">Leer tabla</button><br><br>
             </div>
 
-
-            <div>
-                <h3>Información de tamaños</h3>
-                <table id="tabla-tamaños">
-                    <thead id="thead-tamaños">
-                        <tr id="fila-principal">
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Memoria a usar</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbody-tamaños">
-                        <tr>
-                            <td contenteditable="true">P1</td>
-                            <td contenteditable="true">Notepad</td>
-                            <td contenteditable="true">224649</td>
-                        </tr>
-                        <tr>
-                            <td contenteditable="true">P2</td>
-                            <td contenteditable="true">Word</td>
-                            <td contenteditable="true">286708</td>
-                        </tr>
-                        <tr>
-                            <td contenteditable="true">P3</td>
-                            <td contenteditable="true">Excel</td>
-                            <td contenteditable="true">309150</td>
-                        </tr>
-                        <tr>
-                            <td contenteditable="true">P4</td>
-                            <td contenteditable="true">AutoCAD</td>
-                            <td contenteditable="true">436201</td>>
-                        </tr>
-                        <tr>
-                            <td contenteditable="true">P5</td>
-                            <td contenteditable="true">Calculadora</td>
-                            <td contenteditable="true">209462</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-
-
             <div>
                 <h3>Información de procesos</h3>
                 <table id="tabla-procesos">
                     <thead id="thead-procesos">
                         <tr id="fila-principal">
-                            <th>Proceso</th>
-                            <th>Tiempo</th>
+                            <th rowspan="2">ID</th>
+                            <th rowspan="2">Nombre</th>
+                            <th rowspan="2">Memoria a usar</th>
+                            <th colspan="2" class="tiempo-header">Tiempos</th>
+                        </tr>
+                        <tr id="subfila-principal">
+                            <th>Tiempo 1</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-procesos">
                         <tr>
                             <td contenteditable="true">P1</td>
+                            <td contenteditable="true">Notepad</td>
+                            <td contenteditable="true">224649</td>
                             <td contenteditable="true">X1</td>
                         </tr>
                         <tr>
                             <td contenteditable="true">P2</td>
+                            <td contenteditable="true">Word</td>
+                            <td contenteditable="true">286708</td>
                             <td contenteditable="true">X2</td>
                         </tr>
                         <tr>
                             <td contenteditable="true">P3</td>
+                            <td contenteditable="true">Excel</td>
+                            <td contenteditable="true">309150</td>
                             <td contenteditable="true">X3</td>
                         </tr>
                         <tr>
                             <td contenteditable="true">P4</td>
+                            <td contenteditable="true">AutoCAD</td>
+                            <td contenteditable="true">436201</td>>
                             <td contenteditable="true">X4</td>
                         </tr>
                         <tr>
                             <td contenteditable="true">P5</td>
+                            <td contenteditable="true">Calculadora</td>
+                            <td contenteditable="true">209462</td>
                             <td contenteditable="true">X5</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            
+
         </div>
 
         <div class="tabla-contenedor">
             <div>
                 <button id="Simular-btn">Simular tiempo</button>
             </div>
-            
+
             <div>
                 <h3>Tabla de descripción de particiones</h3>
                 <table id="tabla-procesos">
