@@ -28,9 +28,12 @@
         <div class="tabla-contenedor">
             <div>
                 <br> <br> <br>
-                <button id="agregar-proceso-btn">Agregar Proceso</button> <br> <br>
-                <button class="eliminar-fila-btn">Eliminar último proceso</button><br><br>
-                <button id="leer-informacion-btn">Leer tabla</button><br><br>
+                <button onclick="leerTabla()">Leer tabla</button><br> <br>
+                <button onclick="agregarProceso()">Agregar Proceso</button><br> <br>
+                <button onclick="eliminarUltimoProceso()">Eliminar último proceso</button><br> <br>
+                <button onclick="agregarTiempo()">Agregar tiempo</button><br> <br>
+                <button onclick="eliminarUltimoTiempo()">Eliminar tiempo</button><br> <br>
+
             </div>
 
             <div>
@@ -49,31 +52,31 @@
                     </thead>
                     <tbody id="tbody-procesos">
                         <tr>
-                            <td contenteditable="true">P1</td>
+                            <td contenteditable="false">P1</td>
                             <td contenteditable="true">Notepad</td>
                             <td contenteditable="true">224649</td>
                             <td contenteditable="true">X1</td>
                         </tr>
                         <tr>
-                            <td contenteditable="true">P2</td>
+                            <td contenteditable="false">P2</td>
                             <td contenteditable="true">Word</td>
                             <td contenteditable="true">286708</td>
                             <td contenteditable="true">X2</td>
                         </tr>
                         <tr>
-                            <td contenteditable="true">P3</td>
+                            <td contenteditable="false">P3</td>
                             <td contenteditable="true">Excel</td>
                             <td contenteditable="true">309150</td>
                             <td contenteditable="true">X3</td>
                         </tr>
                         <tr>
-                            <td contenteditable="true">P4</td>
+                            <td contenteditable="false">P4</td>
                             <td contenteditable="true">AutoCAD</td>
                             <td contenteditable="true">436201</td>>
                             <td contenteditable="true">X4</td>
                         </tr>
                         <tr>
-                            <td contenteditable="true">P5</td>
+                            <td contenteditable="false">P5</td>
                             <td contenteditable="true">Calculadora</td>
                             <td contenteditable="true">209462</td>
                             <td contenteditable="true">X5</td>
@@ -106,10 +109,10 @@
                     </thead>
                     <tbody id="tbody-procesos">
                         <tr>
-                            <td contenteditable="true">SO</td>
-                            <td contenteditable="true">1</td>
-                            <td contenteditable="true">0</td>
-                            <td contenteditable="true">000000</td>
+                            <td contenteditable="false">SO</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">0</td>
+                            <td contenteditable="false">000000</td>
                         </tr>
                         <tr>
                             <td contenteditable="true">P1</td>
@@ -365,10 +368,11 @@
             </div>
         </div>
     </footer>
-    <script type="module" src="../../src/tabla.js"> </script>
-    <script type="module" src="../../src/tabla-resultados.js"> </script>
-    <script type="module" src="../../src/controlador.js"></script>
-    <script type="module" src="../../src/Render.js"> </script>
+    <script type="module" src="../../../Lab-2-OS/Back/index.js"> </script>
+    <script type="module" src="../../Back/AlgoParticionDinamicaConCompactacion.js"> </script>
+    <script type="module" src="../../Back/AlgoParticionDinamicaSinCompactacion.js"> </script>
+    <script type="module" src="../../Back/particionesFijas.js"> </script>
+    <script type="module" src="../../Back/particionesVariables.js"> </script>
 </body>
 
 </html>
