@@ -42,7 +42,10 @@ function simular() {
 			break;
 		case "3":
 			for (let t = 0; t < 5; t++) {
-				gestionarMemoriaConTiempos(procesos, t);
+				particionesSinCompactacion.gestionarMemoriaConTiempos(
+					procesos,
+					t
+				);
 			}
 			break;
 		case "4":
@@ -99,6 +102,7 @@ function agregarTiempo() {
 
 	const th = document.createElement("th");
 	th.textContent = `t${nuevoTiempo}`;
+	th.rowSpan = "2";
 	filaTiempos.appendChild(th);
 
 	const filaPrincipal = document.getElementById("fila-principal");
