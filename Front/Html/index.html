@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/CSS/index.css">
+    <link rel="icon" href="../Static/images/Linux-Logo.png">
     <title>Gestión de memoria</title>
 </head>
 
@@ -24,21 +25,19 @@
                 <option value="4">Particiones dinámicas con compactación</option>
             </select>
         </section>
-
         <div class="tabla-contenedor">
             <div>
-                <br> <br> <br>
-                <button onclick="leerTabla()">Leer tabla</button><br> <br>
-                <button onclick="agregarProceso()">Agregar Proceso</button><br> <br>
-                <button onclick="eliminarUltimoProceso()">Eliminar último proceso</button><br> <br>
-                <button onclick="agregarTiempo()">Agregar tiempo</button><br> <br>
-                <button onclick="eliminarUltimoTiempo()">Eliminar tiempo</button><br> <br>
+                <button id="btn-leerTabla">Leer tabla</button><br> <br>
+                <button id="btn-agregarProceso">Agregar Proceso</button><br> <br>
+                <button id="btn-eliminarUltimoProceso">Eliminar último proceso</button><br> <br>
+                <button id="btn-agregarTiempo">Agregar tiempo</button><br> <br>
+                <button id="btn-eliminarUltimoTiempo">Eliminar tiempo</button><br> <br>
 
             </div>
 
             <div>
                 <h3>Información de procesos</h3>
-                <table id="tabla-procesos">
+                <table class="tabla-procesos" id="tabla-procesos">
                     <thead id="thead-procesos">
                         <tr id="fila-principal">
                             <th rowspan="2">ID</th>
@@ -47,7 +46,12 @@
                             <th colspan="2" class="tiempo-header">Tiempos</th>
                         </tr>
                         <tr id="subfila-principal">
-                            <th>Tiempo 1</th>
+                            <th rowspan="2">t1</th>
+                        </tr>
+                        <tr>
+                            <th>P0</th>
+                            <th>OS</th>
+                            <th>1048576</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-procesos">
@@ -368,11 +372,7 @@
             </div>
         </div>
     </footer>
-    <script type="module" src="../../Back/index.js"> </script>
-    <script type="module" src="../../Back/AlgoParticionDinamicaConCompactacion.js"> </script>
-    <script type="module" src="../../Back/AlgoParticionDinamicaSinCompactacion.js"> </script>
-    <script type="module" src="../../Back/particionesFijas.js"> </script>
-    <script type="module" src="../../Back/particionesVariables.js"> </script>
+    <script type="module" src="../../Back/controlador.js"> </script>
 </body>
 
 </html>

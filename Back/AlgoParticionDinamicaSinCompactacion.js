@@ -21,7 +21,7 @@ let procesos = [
 // Cada tiempo tiene una lista de bloques ocupados
 let memoriaPorTiempo = {};
 
-function gestionarMemoriaConFragmentacion(procesos, tiempo) {
+export function gestionarMemoriaConFragmentacion(procesos, tiempo) {
 	const bloquesOcupados = [];
 
 	// Insertar bloque del sistema operativo (mismo en todos los tiempos)

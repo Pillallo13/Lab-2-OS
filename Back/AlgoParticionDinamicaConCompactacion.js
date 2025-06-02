@@ -28,7 +28,7 @@ console.log("Memoria total: " + memoriaTotal.toString());
 console.log("Memoria total(HEX): " + memoriaTotal.toString(16));
 
 // Simula la gestión de memoria por tiempo
-function gestionarMemoriaConTiempos(procesos, tiempoActual) {
+export function gestionarMemoriaConTiempos(procesos, tiempoActual) {
 	let memoriaDisponible = memoriaTotal - os.weight;
 	let tope = os.positions[0].finish;
 

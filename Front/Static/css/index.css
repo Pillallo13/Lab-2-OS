@@ -31,26 +31,31 @@ main {
 
 .tabla-contenedor {
     display: flex;
-    flex-wrap: wrap; 
-    gap: 20px; 
-    justify-content: left; 
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: left;
     padding: 20px;
     border: 1px solid #ccc;
 }
 
-button{
+.tabla-procesos {
+    padding: auto;
+    margin: 20px;
+}
+
+button {
     background-color: #eccaf7;
-    color: rgb(0,0,0);
+    color: rgb(0, 0, 0);
     border-color: #ccc;
     height: 40px;
     width: 150px;
     border-radius: 9999px;
-    
+
 }
 
 table {
     border-collapse: collapse;
-    width: 10%;
+    width: 100%;
     min-width: 400px;
 }
 
@@ -59,7 +64,7 @@ td {
     border: 1px solid #999;
     padding: 0px;
     height: 30px;
-    width: 5%;
+    width: 20px;
     text-align: center;
 }
 
