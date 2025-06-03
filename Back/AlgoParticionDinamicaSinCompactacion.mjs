@@ -97,6 +97,16 @@ export function gestionarMemoriaConFragmentacion(procesos, tiempo) {
 	console.log(
 		"Memoria disponible: " + (memoriaTotal - memoriaOcupada).toString()
 	);
+	// Mostrar posiciones finales
+	console.log("\n Procesos con sus posiciones por tiempo:");
+	console.log(
+		JSON.stringify(
+			procesos,
+			(key, value) =>
+				typeof value === "bigint" ? value.toString() : value,
+			2
+		)
+	);
 }
 
 // Busca un hueco entre bloques ocupados que sea suficientemente grande
@@ -125,17 +135,3 @@ function encontrarHuecoDisponible(bloques, tamaño) {
 
 	return null; // No hay espacio suficiente contiguo
 }
-
-// Simular tiempos
-for (let t = 0; t < os.duration.length; t++) {
-	gestionarMemoriaConFragmentacion(procesos, t);
-}
-// Mostrar posiciones finales
-console.log("\n Procesos con sus posiciones por tiempo:");
-console.log(
-	JSON.stringify(
-		procesos,
-		(key, value) => (typeof value === "bigint" ? value.toString() : value),
-		2
-	)
-);

@@ -1,8 +1,8 @@
 // Bloque de importación ---------------------------------------------------------------------------
 import * as particionesFijas from "./particionesFijas.js";
 import * as particionesVariables from "./particionesVariables.js";
-import * as particionesConCompactacion from "./AlgoParticionDinamicaConCompactacion.js";
-import * as particionesSinCompactacion from "./AlgoParticionDinamicaSinCompactacion.js";
+import * as particionesConCompactacion from "./AlgoParticionDinamicaConCompactacion.mjs";
+import * as particionesSinCompactacion from "./AlgoParticionDinamicaSinCompactacion.mjs";
 
 // Listeners mamahuevo----------------------------------------------------------
 document.addEventListener("DOMContentLoaded", function () {
@@ -42,14 +42,19 @@ function simular() {
 			break;
 		case "3":
 			for (let t = 0; t < 5; t++) {
-				particionesSinCompactacion.gestionarMemoriaConTiempos(
+				particionesSinCompactacion.gestionarMemoriaConFragmentacion(
 					procesos,
 					t
 				);
 			}
 			break;
 		case "4":
-			particionesConCompactacion.gestionarMemoriaConTiempos(procesos);
+			for (let t = 1; t < 5; t++) {
+				particionesConCompactacion.gestionarMemoriaConTiempos(
+					procesos,
+					t
+				);
+			}
 			break;
 		default:
 			alert("jaiiii niño, usted como llego aqui??");
@@ -131,7 +136,6 @@ function eliminarUltimoTiempo() {
 		}
 	}
 }
-
 function leerTablaProcesos() {
 	const tabla = document.getElementById("tabla-procesos");
 	const filas = tabla.querySelectorAll("tbody tr");
@@ -142,30 +146,44 @@ function leerTablaProcesos() {
 		const celdas = fila.querySelectorAll("td");
 		const id = celdas[0].textContent.trim();
 		const nombre = celdas[1].textContent.trim();
-		const memoria = celdas[2].textContent.trim();
-		let duration = {};
+		const memoriaStr = celdas[2].textContent.trim();
 
+		// Validaciones
 		if (!nombre) {
 			errores.push(`Fila ${index + 1}: El nombre no puede estar vacío.`);
 		}
 
-		if (isNaN(memoria) || memoria <= 0) {
+		if (!/^\d+$/.test(memoriaStr)) {
 			errores.push(
-				`Fila ${index + 1}: La memoria debe ser un número positivo.`
+				`Fila ${
+					index + 1
+				}: La memoria debe ser un número entero positivo.`
 			);
 		}
 
-		if (!duration) {
-			errores.push(
-				`Fila ${index + 1}: El tiempo t1 debe ser un número válido.`
-			);
+		// Leer duration como diccionario con claves numéricas desde la columna 3 en adelante
+		const duration = {};
+		for (let i = 3; i < celdas.length; i++) {
+			const clave = i - 2; // Columnas extra desde la 3 en adelante
+			const valor = celdas[i].textContent.trim();
+			if (valor === "") {
+				errores.push(
+					`Fila ${index + 1}, columna ${i + 1}: No puede estar vacía.`
+				);
+			} else {
+				duration[clave] = valor;
+			}
 		}
-		procesos.push({
-			id,
-			nombre,
-			memoria: BigInt(memoria),
-			duration,
-		});
+
+		// Si no hay errores en esta fila, convertir y agregar a la lista de procesos
+		if (errores.length === 0) {
+			procesos.push({
+				id,
+				nombre,
+				memoria: BigInt(memoriaStr),
+				duration,
+			});
+		}
 	});
 
 	if (errores.length > 0) {
@@ -173,6 +191,14 @@ function leerTablaProcesos() {
 		return null;
 	}
 
-	console.log("Procesos leídos correctamente:", procesos);
+	console.log("Procesos leídos correctamente:");
+	console.log(
+		JSON.stringify(
+			procesos,
+			(key, value) =>
+				typeof value === "bigint" ? value.toString() : value,
+			2
+		)
+	);
 	return procesos;
 }

@@ -24,29 +24,37 @@ let procesos = [
 
 const memoriaTotal = 16n * 1024n * 1024n;
 
-console.log("Memoria total: " + memoriaTotal.toString());
-console.log("Memoria total(HEX): " + memoriaTotal.toString(16));
-
-// Simula la gestión de memoria por tiempo
 export function gestionarMemoriaConTiempos(procesos, tiempoActual) {
+	tiempoActual = tiempoActual.toString(); // Asegura que la clave funcione
 	let memoriaDisponible = memoriaTotal - os.weight;
 	let tope = os.positions[0].finish;
 
 	console.log(
-		"\n -Prosexos--------------------------------------------------------------"
+		"\n -Procesos--------------------------------------------------------------"
 	);
+
 	for (let i = 0; i < procesos.length; i++) {
 		const proceso = procesos[i];
-		// Si el proceso debe ejecutarse a partir del tiempo actual
-		if (proceso.duration[tiempoActual]) {
-			const start = tope + 1n;
-			const finish = start + proceso.weight - 1n;
-			proceso.positions[tiempoActual] = {start, finish};
 
-			tope = finish;
-			memoriaDisponible -= proceso.weight;
-			console.log(proceso.name);
-			console.log(proceso.positions[tiempoActual]);
+		if (proceso.duration[tiempoActual]) {
+			// Validación: ¿cabe en memoria?
+			if (memoriaDisponible >= proceso.weight) {
+				const start = tope + 1n;
+				const finish = start + proceso.weight - 1n;
+
+				if (!proceso.positions) proceso.positions = {};
+				proceso.positions[tiempoActual] = {start, finish};
+
+				tope = finish;
+				memoriaDisponible -= proceso.weight;
+
+				console.log(proceso.name);
+				console.log(proceso.positions[tiempoActual]);
+			} else {
+				console.warn(
+					`No hay suficiente memoria para ${proceso.name} en t=${tiempoActual}`
+				);
+			}
 		}
 	}
 
@@ -55,18 +63,4 @@ export function gestionarMemoriaConTiempos(procesos, tiempoActual) {
 	console.log(
 		"Memoria ocupada: " + (memoriaTotal - memoriaDisponible).toString()
 	);
-	// Mostrar estado final de los procesos con sus posiciones en el tiempo
-	console.log("\n Procesos con posiciones por tiempo:");
 }
-
-// Simula varios tiempos
-for (let t = 0; t < os.duration.length; t++) {
-	gestionarMemoriaConTiempos(procesos, t);
-}
-console.log(
-	JSON.stringify(
-		procesos,
-		(key, value) => (typeof value === "bigint" ? value.toString() : value),
-		2
-	)
-);
