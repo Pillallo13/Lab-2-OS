@@ -24,9 +24,42 @@ document.addEventListener("DOMContentLoaded", function () {
 	document.getElementById("Simular-btn").addEventListener("click", simular);
 });
 
-// Funciones mamahuevo---------------------------------------------------------------------------------------
-
+// Funciones mamahuevo---------------------------------------------------------------------------
 function simular() {
+	//Apartado para la constante os ----------------------------------------------------------------
+	const osWeight = document.getElementById("os-weight").textContent.trim();
+
+	// Obtener la fila que contiene la celda "t1"
+	const subfila = document.getElementById("subfila-principal");
+	const celdas = subfila.querySelectorAll("th");
+	let contar = false;
+	const osTiempos = [];
+
+	celdas.forEach((celda, index) => {
+		if (contar) {
+			osTiempos.push(index);
+		}
+		if (celda.textContent.trim() === "t1") {
+			contar = true;
+			osTiempos.push(index);
+		}
+	});
+
+	if (!/^[1-9]\d*$/.test(osWeight)) {
+		return alert(
+			"El peso del OS debe ser un número entero positivo mayor que cero"
+		);
+	}
+
+	let os = crearProceso(
+		"P0",
+		document.getElementById("os-name").textContent.trim(),
+		BigInt(osWeight),
+		osTiempos,
+		{0: {start: 0n, finish: 1048575n}}
+	);
+	console.log(os);
+	//-------------------------------------------------------------------------------------------
 	const procesos = leerTablaProcesos();
 	if (!procesos) return;
 
@@ -41,18 +74,20 @@ function simular() {
 			alert("Manu hace esta mkda");
 			break;
 		case "3":
-			for (let t = 0; t < 5; t++) {
+			for (let t = 1; t < osTiempos.length + 1; t++) {
 				particionesSinCompactacion.gestionarMemoriaConFragmentacion(
 					procesos,
-					t
+					t,
+					os
 				);
 			}
 			break;
 		case "4":
-			for (let t = 1; t < 5; t++) {
+			for (let t = 1; t < osTiempos.length + 1; t++) {
 				particionesConCompactacion.gestionarMemoriaConTiempos(
 					procesos,
-					t
+					t,
+					os
 				);
 			}
 			break;
@@ -166,23 +201,13 @@ function leerTablaProcesos() {
 		for (let i = 3; i < celdas.length; i++) {
 			const clave = i - 2; // Columnas extra desde la 3 en adelante
 			const valor = celdas[i].textContent.trim();
-			if (valor === "") {
-				errores.push(
-					`Fila ${index + 1}, columna ${i + 1}: No puede estar vacía.`
-				);
-			} else {
-				duration[clave] = valor;
-			}
+
+			duration[clave] = valor;
 		}
 
 		// Si no hay errores en esta fila, convertir y agregar a la lista de procesos
 		if (errores.length === 0) {
-			procesos.push({
-				id,
-				nombre,
-				memoria: BigInt(memoriaStr),
-				duration,
-			});
+			procesos.push(crearProceso(id, nombre, memoriaStr, duration));
 		}
 	});
 
@@ -201,4 +226,14 @@ function leerTablaProcesos() {
 		)
 	);
 	return procesos;
+}
+
+function crearProceso(id, name, weight, duration = {}, positions = {}) {
+	return {
+		id,
+		name,
+		weight: BigInt(weight),
+		duration,
+		positions,
+	};
 }
