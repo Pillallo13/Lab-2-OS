@@ -76,11 +76,19 @@ async function simular() {
 
 		switch (seleccion) {
 			case "1":
-				alert("Manu hace esta mkda");
-				return;
+				resultado = particionesFijas.gestionarMemoriaFija(
+					procesos,
+					i,
+					os
+				);
+               		 	break;
 			case "2":
-				alert("Manu hace esta mkda");
-				return;
+				resultado = particionesVariables.gestionarMemoriaVariable(
+					procesos,
+					i,
+					os
+				);
+				break;
 			case "3":
 				// La función debe retornar { procesos, bloquesOcupados }
 				resultado = particionesSinCompactacion.gestionarMemoriaConFragmentacion(
