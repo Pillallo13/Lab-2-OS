@@ -1,7 +1,6 @@
 export function gestionarMemoriaConFragmentacion(procesos, tiempo, os) {
 	const memoriaTotal = 16n * 1024n * 1024n; // 16 MB
-	let memoriaPorTiempo = {};
-	const bloquesOcupados = [];
+	let bloquesOcupados = [];
 
 	// Insertar bloque del sistema operativo si aplica en este tiempo
 	if (os?.positions?.[0]) {
@@ -13,16 +12,11 @@ export function gestionarMemoriaConFragmentacion(procesos, tiempo, os) {
 	}
 
 	for (const proceso of procesos) {
-		// Normalizar duración (puede ser "X1", "x", etc.)
 		const duracion = proceso.duration?.[tiempo]?.toLowerCase();
 		if (duracion) {
-			// Asegurar estructura
 			if (!proceso.positions) proceso.positions = {};
-			if (!proceso.weight) {
-				proceso.weight = BigInt(proceso.memoria); // ← conversión desde campo original
-			}
+			if (!proceso.weight) proceso.weight = BigInt(proceso.memoria);
 
-			// Verificar si ya fue asignado antes
 			let yaAsignado = false;
 
 			for (let tPrev = 0; tPrev < tiempo; tPrev++) {
@@ -56,52 +50,15 @@ export function gestionarMemoriaConFragmentacion(procesos, tiempo, os) {
 						finish,
 						name: proceso.nombre ?? proceso.name,
 					});
-				} else {
-					console.log(
-						`Tiempo ${tiempo}: No hay espacio para ${
-							proceso.nombre ?? proceso.name
-						}`
-					);
 				}
 			}
 		}
 	}
 
-	memoriaPorTiempo[tiempo] = bloquesOcupados;
-
-	// 🔵 Mostrar resumen
-	console.log("\n Tiempo " + tiempo);
-	console.log(" Bloques ocupados:");
-	bloquesOcupados
-		.sort((a, b) => (a.start < b.start ? -1 : 1))
-		.forEach((b) =>
-			console.log(
-				`- ${b.name}: [${b.start} - ${b.finish}] (${
-					b.finish - b.start + 1n
-				} bytes)`
-			)
-		);
-
-	const memoriaOcupada = bloquesOcupados.reduce(
-		(total, b) => total + (b.finish - b.start + 1n),
-		0n
-	);
-
-	console.log(" Memoria ocupada: " + memoriaOcupada.toString());
-	console.log(
-		" Memoria disponible: " + (memoriaTotal - memoriaOcupada).toString()
-	);
-
-	console.log("\n Procesos con posiciones por tiempo:");
-	console.log(
-		JSON.stringify(
-			procesos,
-			(key, value) =>
-				typeof value === "bigint" ? value.toString() : value,
-			2
-		)
-	);
+	// Retornar los datos en vez de solo imprimir
+	return { procesos, bloquesOcupados };
 }
+
 
 function encontrarHuecoDisponible(bloques, tamaño, memoriaTotal) {
 	bloques.sort((a, b) => (a.start < b.start ? -1 : 1));

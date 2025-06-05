@@ -25,8 +25,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Funciones mamahuevo---------------------------------------------------------------------------
-function simular() {
-	//Apartado para la constante os ----------------------------------------------------------------
+async function simular() {
+	// Apartado para la constante os ----------------------------------------------------------------
 	const osWeight = document.getElementById("os-weight").textContent.trim();
 
 	// Obtener la fila que contiene la celda "t1"
@@ -56,46 +56,252 @@ function simular() {
 		document.getElementById("os-name").textContent.trim(),
 		BigInt(osWeight),
 		osTiempos,
-		{0: {start: 0n, finish: 1048575n}}
+		{ 0: { start: 0n, finish: 1048575n } }
 	);
 	console.log(os);
-	//-------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------
+
 	const procesos = leerTablaProcesos();
 	if (!procesos) return;
 
-	const selector = document.getElementById("selector"); // Asegúrate que tenga este ID en el HTML
+	const selector = document.getElementById("selector");
 	const seleccion = selector.value;
 
-	switch (seleccion) {
-		case "1":
-			alert("Manu hace esta mkda");
-			break;
-		case "2":
-			alert("Manu hace esta mkda");
-			break;
-		case "3":
-			for (let t = 1; t < osTiempos.length + 1; t++) {
-				particionesSinCompactacion.gestionarMemoriaConFragmentacion(
+	// Limpiar resultados previos si hay
+	const resultadosContenedor = document.getElementById("resultados");
+	resultadosContenedor.innerHTML = "";
+
+	for (let i = 1; i <= osTiempos.length; i++) {
+		let resultado;
+
+		switch (seleccion) {
+			case "1":
+				alert("Manu hace esta mkda");
+				return;
+			case "2":
+				alert("Manu hace esta mkda");
+				return;
+			case "3":
+				// La función debe retornar { procesos, bloquesOcupados }
+				resultado = particionesSinCompactacion.gestionarMemoriaConFragmentacion(
 					procesos,
-					t,
+					i,
 					os
 				);
-			}
-			break;
-		case "4":
-			for (let t = 1; t < osTiempos.length + 1; t++) {
-				particionesConCompactacion.gestionarMemoriaConTiempos(
+				break;
+			case "4":
+				resultado = particionesConCompactacion.gestionarMemoriaConTiempos(
 					procesos,
-					t,
+					i,
 					os
 				);
-			}
-			break;
-		default:
-			alert("jaiiii niño, usted como llego aqui??");
-			break;
+				break;
+			default:
+				alert("jaiiii niño, usted como llego aqui??");
+				return;
+		}
+
+		// Crear tabla de procesos para el tiempo i
+		const tablaProcesos = crearTablaProcesos(resultado.procesos, i.toString());
+
+		// Crear tabla descripción para el tiempo i
+		const tablaDescripcion = crearTablaDescripcion(resultado.bloquesOcupados);
+
+		// Contenedor para el tiempo i
+		const contenedorTiempo = document.createElement("div");
+		contenedorTiempo.style.border = "1px solid #ccc";
+		contenedorTiempo.style.margin = "1em 0";
+		contenedorTiempo.style.padding = "0.5em";
+
+		const titulo = document.createElement("h3");
+		titulo.textContent = `Tiempo t${i}`;
+		contenedorTiempo.appendChild(titulo);
+
+		contenedorTiempo.appendChild(tablaProcesos);
+		contenedorTiempo.appendChild(tablaDescripcion);
+
+		resultadosContenedor.appendChild(contenedorTiempo);
 	}
 }
+
+function crearTablaProcesos(procesos, tiempo) {
+  const tabla = document.createElement("table");
+  tabla.id = "tabla-procesos";
+
+  // Crear thead con dos filas según estructura
+  const thead = document.createElement("thead");
+  thead.id = "thead-procesos";
+
+  const filaPrincipal = document.createElement("tr");
+  filaPrincipal.id = "fila-principal";
+
+  const thPid = document.createElement("th");
+  thPid.rowSpan = 2;
+  thPid.textContent = "PID";
+  filaPrincipal.appendChild(thPid);
+
+  const thLo = document.createElement("th");
+  thLo.rowSpan = 2;
+  thLo.textContent = "L/O";
+  filaPrincipal.appendChild(thLo);
+
+  const thBase = document.createElement("th");
+  thBase.colSpan = 2;
+  thBase.classList.add("bloqueo-header");
+  thBase.textContent = "Base";
+  filaPrincipal.appendChild(thBase);
+
+  const subfilaPrincipal = document.createElement("tr");
+  subfilaPrincipal.id = "subfila-principal";
+
+  const thDec = document.createElement("th");
+  thDec.textContent = "DEC";
+  subfilaPrincipal.appendChild(thDec);
+
+  const thHex = document.createElement("th");
+  thHex.textContent = "HEX";
+  subfilaPrincipal.appendChild(thHex);
+
+  thead.appendChild(filaPrincipal);
+  thead.appendChild(subfilaPrincipal);
+
+  tabla.appendChild(thead);
+
+  // Crear tbody
+  const tbody = document.createElement("tbody");
+  tbody.id = "tbody-procesos";
+
+  // Recorrer procesos para crear filas
+  procesos.forEach((proceso, index) => {
+    const tr = document.createElement("tr");
+
+    // PID (ID o nombre)
+    const tdPid = document.createElement("td");
+    tdPid.contentEditable = index === 0 ? "false" : "true"; // SO no editable
+    tdPid.textContent = proceso.name || proceso.nombre || "0";
+    tr.appendChild(tdPid);
+
+    // L/O (en el ejemplo siempre es 1 para procesos y 0 para SO? Aquí lo dejamos 1 excepto SO)
+    const tdLo = document.createElement("td");
+    tdLo.contentEditable = index === 0 ? "false" : "true";
+    tdLo.textContent = index === 0 ? "1" : "1"; // Puedes ajustar si tienes otro dato para esto
+    tr.appendChild(tdLo);
+
+    // Base DEC (Posición inicio de memoria para el tiempo dado)
+    const tdDec = document.createElement("td");
+    tdDec.contentEditable = index === 0 ? "false" : "true";
+
+    const posicion = proceso.positions?.[tiempo];
+    tdDec.textContent = posicion ? posicion.start.toString() : "0";
+    tr.appendChild(tdDec);
+
+    // Base HEX (convertir a hexadecimal sin 0x y en mayúsculas)
+    const tdHex = document.createElement("td");
+    tdHex.contentEditable = index === 0 ? "false" : "true";
+
+    if (posicion) {
+      tdHex.textContent = posicion.start.toString(16).toUpperCase().padStart(6, "0");
+    } else {
+      tdHex.textContent = "000000";
+    }
+    tr.appendChild(tdHex);
+
+    tbody.appendChild(tr);
+  });
+
+  tabla.appendChild(tbody);
+
+  return tabla;
+}
+
+
+export function crearTablaDescripcion(bloquesOcupados) {
+  if (!Array.isArray(bloquesOcupados)) {
+    console.warn("bloquesOcupados no es un arreglo válido.");
+    return document.createTextNode("Error: no se pudo generar la tabla.");
+  }
+
+  const tabla = document.createElement("table");
+  tabla.style.border = "black";
+
+  // ----- Encabezado -----
+  const thead = document.createElement("thead");
+  const filaEncabezado = document.createElement("tr");
+
+  const thDireccion = document.createElement("th");
+  thDireccion.textContent = "Dirección";
+  filaEncabezado.appendChild(thDireccion);
+
+  const thNombre = document.createElement("th");
+  thNombre.textContent = "Proceso";
+  filaEncabezado.appendChild(thNombre);
+
+  const thTamano = document.createElement("th");
+  thTamano.textContent = "Tamaño (bytes)";
+  filaEncabezado.appendChild(thTamano);
+
+  thead.appendChild(filaEncabezado);
+  tabla.appendChild(thead);
+
+  // ----- Cuerpo de la tabla -----
+  const tbody = document.createElement("tbody");
+
+  // Orden inverso para simular pila
+  const bloquesOrdenados = bloquesOcupados
+    .slice()
+    .sort((a, b) => (a.start < b.start ? -1 : 1))
+    .reverse();
+
+  bloquesOrdenados.forEach((bloque, index) => {
+    const fila = document.createElement("tr");
+
+    // Dirección
+    const tdDireccion = document.createElement("td");
+    const divDireccion = document.createElement("div");
+    divDireccion.className = "vacio";
+    divDireccion.textContent = bloque.start.toString();
+    tdDireccion.appendChild(divDireccion);
+    fila.appendChild(tdDireccion);
+
+    // Proceso
+    const tdNombre = document.createElement("td");
+    const divNombre = document.createElement("div");
+
+    if (bloque.name === "SO" || bloque.name === "S. O") {
+      divNombre.className = "so";
+      divNombre.textContent = "S. O";
+    } else if (!bloque.name || bloque.name === "0" || bloque.name === "") {
+      divNombre.className = "vacio";
+      divNombre.textContent = "";
+    } else {
+      divNombre.className = "ejecucion";
+      divNombre.textContent = bloque.name;
+    }
+
+    tdNombre.appendChild(divNombre);
+    fila.appendChild(tdNombre);
+
+    // Tamaño
+    const tdTamano = document.createElement("td");
+    const divTamano = document.createElement("div");
+    divTamano.className = divNombre.className; // misma clase visual
+    const tamano = (bloque.finish - bloque.start + 1n).toString();
+    divTamano.textContent = tamano;
+    tdTamano.appendChild(divTamano);
+    fila.appendChild(tdTamano);
+
+    // 🔶 Última fila fondo amarillo
+    if (index === bloquesOrdenados.length - 1) {
+      fila.style.backgroundColor = "yellow";
+    }
+
+    tbody.appendChild(fila);
+  });
+
+  tabla.appendChild(tbody);
+  return tabla;
+}
+
 
 function agregarProceso() {
 	const tbody = document.getElementById("tbody-procesos");

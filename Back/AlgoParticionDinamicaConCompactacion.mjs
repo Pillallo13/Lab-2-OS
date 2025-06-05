@@ -1,19 +1,19 @@
 export function gestionarMemoriaConTiempos(procesos, tiempoActual, os) {
 	const memoriaTotal = 16n * 1024n * 1024n;
-	tiempoActual = tiempoActual.toString(); // Asegura que la clave funcione
+	tiempoActual = tiempoActual.toString();
 
 	let memoriaDisponible = memoriaTotal - os.weight;
 	let tope = os.positions[0].finish;
 
-	console.log(
-		"\n -Procesos--------------------------------------------------------------"
-	);
+	let bloquesOcupados = [
+		{
+			start: os.positions[0].start,
+			finish: os.positions[0].finish,
+			name: os.name ?? "SO",
+		},
+	];
 
-	console.log(os.name);
-	console.log(os.positions[0]);
-	for (let i = 0; i < procesos.length; i++) {
-		const proceso = procesos[i];
-
+	for (const proceso of procesos) {
 		if (proceso.duration?.[tiempoActual]) {
 			if (!proceso.positions) proceso.positions = {};
 
@@ -21,23 +21,18 @@ export function gestionarMemoriaConTiempos(procesos, tiempoActual, os) {
 				const start = tope + 1n;
 				const finish = start + proceso.weight - 1n;
 
-				proceso.positions[tiempoActual] = {start, finish};
+				proceso.positions[tiempoActual] = { start, finish };
 				tope = finish;
 				memoriaDisponible -= proceso.weight;
 
-				console.log(proceso.name);
-				console.log(proceso.positions[tiempoActual]);
-			} else {
-				console.warn(
-					`No hay suficiente memoria para ${proceso.name} en t=${tiempoActual}`
-				);
+				bloquesOcupados.push({
+					start,
+					finish,
+					name: proceso.name,
+				});
 			}
 		}
 	}
 
-	console.log("\n Tiempo: " + tiempoActual);
-	console.log("Memoria disponible: " + memoriaDisponible.toString());
-	console.log(
-		"Memoria ocupada: " + (memoriaTotal - memoriaDisponible).toString()
-	);
+	return { procesos, bloquesOcupados };
 }
