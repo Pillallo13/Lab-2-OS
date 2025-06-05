@@ -1,34 +1,5 @@
-function crearProceso(name, weight, duration = {}, positions = {}) {
-  return {
-    name,
-    weight: BigInt(weight),
-    duration,
-    positions,
-  };
-}
-
 // Memoria total (16 MiB)
 const memoriaTotal = 16n * 1024n * 1024n;
-const os = crearProceso(
-  "OS",
-  1048576n,// 1 MiB = 1 * 1024 * 1024 bytes
-  [0, 1, 2, 3, 4, 5, 6],
-  { 0: { start: 0n, finish: 1048575n } }
-);
-
-// Procesos de ejemplo
-let procesos = [
-  crearProceso("p4", 436201n, { 0: "x", 1: "x", 2: "x" }),
-  crearProceso("p8", 2696608n, { 0: "x", 1: "x", 2: "x", 3: "x", 4: "x" }),
-  crearProceso("p3", 309150n, { 0: "x", 1: "x" }),
-];
-
-let memoriaPorTiempo = {};
-
-export function ejecutarParticionVariable() {
-  // Reiniciar estados
-  procesos.forEach((p) => (p.positions = {}));
-  memoriaPorTiempo = {};
   // Definir las particiones variables (5 bloques) cuya suma es 16 MiB
     //    Los tamaños suman en total 16 MiB
     //    - 5 120 000 bytes (≈5000 KiB)
@@ -52,35 +23,40 @@ export function ejecutarParticionVariable() {
     { start: tA + tB + tC + tD, size: tRestante },
   ];
 
-  for (let t = 0; t < os.duration.length; t++) {
-    gestionarMemoriaConFragmentacion(procesos, t, partitions);
-  }
-  // Devolver resultados (bloques por tiempo y procesos con posiciones)
-  return { memoriaPorTiempo, procesos };
-}
-
-function gestionarMemoriaConFragmentacion(procesos, tiempo, partitions) {
+export function gestionarMemoriaVariable(procesos, tiempo, os) {
   const bloquesOcupados = [];
 
-  if (os.duration.includes(tiempo)) {
+  // 2) Insertar bloque del SO en cada tiempo
+  if (os?.positions?.[0]) {
     bloquesOcupados.push({
       start: os.positions[0].start,
       finish: os.positions[0].finish,
-      name: os.name,
+      name: os.name ?? "OS",
+    });
+  } else {
+    // Si no estaba inicializado, se coloca ahora en [0..1 048 575]
+    os.positions = { 0: { start: 0n, finish: 1048575n } };
+    bloquesOcupados.push({
+      start: 0n,
+      finish: 1048575n,
+      name: os.name ?? "OS",
     });
   }
 
   // Para cada proceso
   for (const proceso of procesos) {
-    if (proceso.duration[tiempo] === "x") {
+    const duracionHere = proceso.duration?.[tiempo];
+    const activo = typeof duracionHere === "string" && duracionHere.toLowerCase() === "x";
 
+    if (activo) {
+      if (!proceso.positions) proceso.positions = {};
       let yaAsignado = false;
+
+      //Si estuvo activo en un tiempo previo tPrev < tiempo, copiamos esa posición
       for (let tPrev = 0; tPrev < tiempo; tPrev++) {
-        if (
-          proceso.duration[tPrev] === "x" &&
-          proceso.positions[tPrev]
-        ) {
-          // Copiar posición previa
+        const durPrev = proceso.duration?.[tPrev];
+        const activoPrev = typeof durPrev === "string" && durPrev.toLowerCase() === "x";
+        if (activoPrev && proceso.positions?.[tPrev]) {
           proceso.positions[tiempo] = proceso.positions[tPrev];
           bloquesOcupados.push({
             start: proceso.positions[tPrev].start,
@@ -91,51 +67,33 @@ function gestionarMemoriaConFragmentacion(procesos, tiempo, partitions) {
           break;
         }
       }
-
+      //Si no estaba copiado, busco hueco libre en alguna partición variable
       if (!yaAsignado) {
         const espacioLibre = encontrarHuecoDisponible(
           bloquesOcupados,
           proceso.weight,
           partitions
         );
-
         if (espacioLibre) {
           const { start, finish } = espacioLibre;
           proceso.positions[tiempo] = { start, finish };
-          bloquesOcupados.push({ start, finish, name: proceso.name });
+          bloquesOcupados.push({
+            start,
+            finish,
+            name: proceso.name,
+          });
         } else {
-          console.log(
-            `  Tiempo ${tiempo}: No hay espacio para ${proceso.name}`
-          );
+          console.log(`Tiempo ${tiempo}: No hay espacio para ${proceso.name}`);
         }
       }
     }
   }
-
-  // Guardar estado
-  memoriaPorTiempo[tiempo] = bloquesOcupados;
-
-  // Imprimir en consola
-  console.log(`\nTiempo ${tiempo}`);
-  console.log("Bloques ocupados:");
-  bloquesOcupados
-    .sort((a, b) => (a.start < b.start ? -1 : 1))
-    .forEach((b) =>
-      console.log(
-        `- ${b.name}: [${b.start} - ${b.finish}] (${(b.finish - b.start + 1n).toString()} bytes)`
-      )
-    );
-
-  const memoriaOcupada = bloquesOcupados.reduce(
-    (total, b) => total + (b.finish - b.start + 1n),
-    0n
-  );
-  console.log("Memoria ocupada: " + memoriaOcupada.toString());
-  console.log("Memoria disponible: " + (memoriaTotal - memoriaOcupada).toString());
+  //Devolver procesos y bloques para construir la tabla en el controlador
+  return { procesos, bloquesOcupados };
 }
 
 function encontrarHuecoDisponible(bloques, tamaño, partitions) {
-  // Ordenar bloques ocupados por start
+  //Ordenar los bloques existentes por dirección de inicio
   bloques.sort((a, b) => (a.start < b.start ? -1 : 1));
 
   for (const particion of partitions) {
@@ -144,6 +102,7 @@ function encontrarHuecoDisponible(bloques, tamaño, partitions) {
       const partStart = particion.start;
       const partFinish = particion.start + particion.size - 1n;
 
+      //Comprobar solapamiento con cualquiera de los bloques actuales
       for (const b of bloques) {
         if (!(b.finish < partStart || b.start > partFinish)) {
           colision = true;
@@ -159,6 +118,5 @@ function encontrarHuecoDisponible(bloques, tamaño, partitions) {
       }
     }
   }
-
   return null;
 }
