@@ -1,8 +1,8 @@
 // Bloque de importación ---------------------------------------------------------------------------
-import * as particionesFijas from "./particionesFijas.js";
-import * as particionesVariables from "./particionesVariables.js";
 import * as particionesConCompactacion from "./AlgoParticionDinamicaConCompactacion.mjs";
 import * as particionesSinCompactacion from "./AlgoParticionDinamicaSinCompactacion.mjs";
+import * as particionesFijas from "./particionesFijas.mjs";
+import * as particionesVariables from "./particionesVariables.mjs";
 
 // Listeners mamahuevo----------------------------------------------------------
 document.addEventListener("DOMContentLoaded", function () {
@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
 async function simular() {
 	// Apartado para la constante os ----------------------------------------------------------------
 	const osWeight = document.getElementById("os-weight").textContent.trim();
-
 	// Obtener la fila que contiene la celda "t1"
 	const subfila = document.getElementById("subfila-principal");
 	const celdas = subfila.querySelectorAll("th");
@@ -58,7 +57,7 @@ async function simular() {
 		osTiempos,
 		{ 0: { start: 0n, finish: 1048575n } }
 	);
-	console.log(os);
+
 	// -------------------------------------------------------------------------------------------
 
 	const procesos = leerTablaProcesos();
@@ -81,7 +80,8 @@ async function simular() {
 					i,
 					os
 				);
-               		 	break;
+                break;
+
 			case "2":
 				resultado = particionesVariables.gestionarMemoriaVariable(
 					procesos,
@@ -89,6 +89,7 @@ async function simular() {
 					os
 				);
 				break;
+
 			case "3":
 				// La función debe retornar { procesos, bloquesOcupados }
 				resultado = particionesSinCompactacion.gestionarMemoriaConFragmentacion(
@@ -97,6 +98,7 @@ async function simular() {
 					os
 				);
 				break;
+
 			case "4":
 				resultado = particionesConCompactacion.gestionarMemoriaConTiempos(
 					procesos,
@@ -104,8 +106,9 @@ async function simular() {
 					os
 				);
 				break;
+
 			default:
-				alert("jaiiii niño, usted como llego aqui??");
+				alert("Selecciona un algoritmo válido.");
 				return;
 		}
 
@@ -298,7 +301,7 @@ export function crearTablaDescripcion(bloquesOcupados) {
     tdTamano.appendChild(divTamano);
     fila.appendChild(tdTamano);
 
-    // 🔶 Última fila fondo amarillo
+    //Última fila fondo amarillo
     if (index === bloquesOrdenados.length - 1) {
       fila.style.backgroundColor = "yellow";
     }

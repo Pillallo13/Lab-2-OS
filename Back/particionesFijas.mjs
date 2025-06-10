@@ -1,3 +1,5 @@
+// particionesFija.mjs
+
 // Memoria total (16 MiB)
 const memoriaTotal = 16n * 1024n * 1024n;
 
@@ -109,9 +111,6 @@ function encontrarHuecoDisponible(bloques, tamaño, partitions) {
         };
       }
     }
-  }
-  return null;
-}
   }
   return null;
 }
